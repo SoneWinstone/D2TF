@@ -1,29 +1,41 @@
 # -*- coding: UTF-8 -*-
 import os
 
-newDir = "H:" + os.sep + "Test"
-fileDir = "H:" + os.sep + "Code" + os.sep + "Java\\tale"
-context = ''
+rebuildDir = ""
+contextDir = ""
+context = ""
 
 def rebuildFiles(filePath):
+  global rebuildDir
   fileStart = False
-  controlFile = open(filePath, encoding='UTF-8') 
-  lines = controlFile.readlines()
+  file = open(filePath, encoding="UTF-8") 
+  lines = file.readlines()
   for line in lines: 
-    if line.startswith('$$$'):
+    if line.startswith("$$$"):
+      if "newFile" in vars():
+        # close opened file 
+        newFile.close()
       fileStart = True
-      newFilePath = line[3:-1]
-      newFilePath = newFilePath.replace(fileDir, newDir)
+      oldFilePath = line[3:-1]
+      newFilePath = oldFilePath.replace(contextDir, rebuildDir)
       parentDir = getParentDir(newFilePath)
       if not os.path.exists(parentDir):
         os.makedirs(parentDir)
-      newFile = open(newFilePath, 'w', encoding='UTF-8')
+      newFile = open(newFilePath, "w", encoding="UTF-8")
       continue
     if fileStart:
       newFile.write(line)
 
 def getParentDir(path):
-  return str(path)[:str(path).rindex(os.sep)]
+  filename = str(path)
+  return filename[:filename.rindex(os.sep)]
 
 if __name__ == '__main__':
-  rebuildFiles(os.path.join(fileDir, 'context'))
+  contextDir = input("input the backup file absolute dir path: ")
+  while not os.path.exists(contextDir):
+    print("dir not exists!")
+    contextDir = input("input the backup file absolute dir path: ")
+  rebuildDir = input("input the rebuild dir path: ")
+  if (rebuildDir == ""):
+    rebuildDir = contextDir
+  rebuildFiles(os.path.join(contextDir, "context"))

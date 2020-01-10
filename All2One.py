@@ -1,41 +1,46 @@
 # -*- coding: UTF-8 -*-
 import os
 
-fileDir = "H:" + os.sep + "Code" + os.sep + "Java\\tale"
-context = ''
-fileFilter = ['txt', 'md', 'html', 'css', 'js']
+context = ""
+# suffix in filter will be backup
+suffixFilter = ["txt", "md", "html", "css", "js", "py"]
 
-def readFiles(filePath):
+def readFiles(dir):
   global context
-  for root, dirs, files in os.walk(filePath):
+  for root, dirs, files in os.walk(dir):
     for file in files:
       fileName = os.path.join(root, file)
-      if (getSuffix(fileName) not in fileFilter):
+      if (getSuffix(fileName) not in suffixFilter):
         continue
-      controlFile = open(fileName, 'r', encoding='UTF-8') 
+      controlFile = open(fileName, "r", encoding="UTF-8") 
       lines = controlFile.readlines()
       if lines.__len__() > 0:
-        context = context + '$$$' + os.path.join(root, file) + '\n'
+        context = context + "$$$" + os.path.join(root, file) + "\n"
       for line in lines: 
         context = context + line
-      context = context + '\n'
+      context = context + "\n"
       controlFile.close()
     # for dir in dirs:
     #   readFiles(os.path.join(root, dir))
 
 def getParentDir(path):
-  return str(path)[:str(path).rfind(os.sep)]
+  filename = str(path)
+  return filename[:filename.rfind(os.sep)]
 
 def getSuffix(file):
-  print(file)
-  pointIndex = str(file).rfind('.')
+  filename = str(file)
+  pointIndex = filename.rfind('.')
   if pointIndex == -1:
-    return ''
-  return str(file)[pointIndex + 1:]
+    return ""
+  return filename[pointIndex + 1:]
 
 if __name__ == '__main__':
-  readFiles(fileDir)
-  # os.remove(os.path.join(fileDir, 'context'))
-  f = open(os.path.join(fileDir, 'context'), 'w+', encoding='UTF-8')
+  dir = input("input absolute dir path you want backup: ")
+  while not os.path.exists(dir):
+    print("dir not exists!")
+    dir = input("input absolute dir path you want backup: ")
+  readFiles(dir)
+  f = open(os.path.join(dir, "context"), "w", encoding="UTF-8")
   f.writelines(context)
   f.close()
+  print("backup success!")
