@@ -6,3 +6,8 @@ Dir to text file
 python All2One.py
 ### recovery
 python One2All.py
+
+## TODO
+
+- [ ] GUI  
+- [ ] backup files not text
