@@ -8,6 +8,6 @@ python All2One.py
 python One2All.py
 
 ## TODO
-
 - [ ] GUI  
 - [ ] backup files not text
+- [ ] use database save config

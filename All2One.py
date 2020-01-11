@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 import os
+import sys
 
 context = ""
 # suffix in filter will be backup
-suffixFilter = ["txt", "md", "html", "css", "js", "py"]
+suffixFilter = []
 
 def readFiles(dir):
   global context
@@ -34,7 +35,19 @@ def getSuffix(file):
     return ""
   return filename[pointIndex + 1:]
 
+def init():
+  global suffixFilter
+  conf = open("D2TF.conf", "r", encoding="UTF-8")
+  lines = conf.readlines()
+  for line in lines:
+    if line.startswith("filter"):
+      split = line.split(",")
+      for sp in split:
+        suffixFilter.append(str(sp).strip())
+
 if __name__ == '__main__':
+  init()
+
   dir = input("input absolute dir path you want backup: ")
   while not os.path.exists(dir):
     print("dir not exists!")
